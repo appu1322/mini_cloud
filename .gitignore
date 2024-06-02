@@ -1,0 +1,3 @@
+volumes/mongo
+cloud_frontend/node_modules
+cloud_backend/node_modules

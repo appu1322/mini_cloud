@@ -1,0 +1,36 @@
+version: "2.4"
+services:
+  mongo: 
+    image: mongo:6
+    restart: always
+    ports:
+      - 27033:27017
+    volumes:
+      - ./volumes/mongo:/data/db
+
+  cloud_backend:
+    build: 
+      context: cloud_backend
+    container_name: cloud_backend
+    environment: 
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+    volumes:
+      - ./volumes/uploads:/usr/app/uploads
+  
+  cloud_frontend:
+    build: 
+      context: cloud_frontend
+      args:
+        VITE_BASE_URL: ${VITE_BASE_URL}
+    container_name: cloud_frontend
+    restart: "always"
+    environment: 
+      VITE_BASE_URL: ${VITE_BASE_URL}
+    ports:
+      - "80:80"
