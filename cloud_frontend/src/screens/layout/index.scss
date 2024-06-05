@@ -1,0 +1,20 @@
+.layout{
+    display: flex;
+    height: calc(100vh - 68px);
+
+    .sidebar {
+        padding: 0px 16px;
+        width: 250px;
+
+        .new-btn{
+            margin-bottom: 16px;
+        }
+    }
+
+    .content {
+        width: calc(100% - 250px);
+        padding: 0px 16px;
+        border-radius: 25px 0px 0px 0px;
+        background-color: #fff;
+    }
+}

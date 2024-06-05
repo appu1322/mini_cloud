@@ -37,10 +37,11 @@ router
 router
     .get('/test', async (req, res) => {
         const filePath = path.join(__dirname, '../../../', 'uploads/', 'abc.mp4');
+        const {fileName} = req.query;
 
         res.download(
             filePath,
-            "downloaded-book.png", // Remember to include file extension
+            fileName, // Remember to include file extension
             (err) => {
                 if (err && err.message.trim() !== "Request aborted") {
                     res.send({
