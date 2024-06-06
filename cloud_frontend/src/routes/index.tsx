@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import PageNotFound from "../components/page-not-found";
 import Layout from "../screens/layout";
 import MyDrive from "../screens/layout/my-drive";
+import Home from "../screens/Home";
 
 export default createBrowserRouter([
     {
@@ -21,6 +22,11 @@ export default createBrowserRouter([
             {
                 path: "my-drive",
                 element: <MyDrive />,
+                errorElement: <PageNotFound />
+            },
+            {
+                path: "test",
+                element: <Home />,
                 errorElement: <PageNotFound />
             }
         ],

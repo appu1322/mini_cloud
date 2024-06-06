@@ -1,28 +1,28 @@
 import { Router } from 'express';
 import { makeResponse } from '../../lib';
-import { addContactValidation, updateContactValidation } from '../../middlewares';
-import { addContact, updateContact, getContact, getContacts, getContactsWithPagination, getContactsCount, updateContacts } from '../../services';
+import { addUserValidation, updateUserValidation } from '../../middlewares';
+import { addUser, updateUser, getUser, getUsers, getUsersWithPagination, getUsersCount, updateUsers } from '../../services';
 
 const router = Router();
 
 router
     .post(
         '/',
-        addContactValidation,
+        addUserValidation,
         async (req, res) => {
-            const { contact } = req.body;
+            const { User } = req.body;
             const search = {
-                'contact.email': contact.email,
-                'contact.mobileNumber.number': contact.mobileNumber.number
+                'conatct.email': User.email,
+                'conatct.mobileNumber.number': User.mobileNumber.number
             };
             try {
-                contact.email
-                const exist = await getContact(search);
+                User.email
+                const exist = await getUser(search);
 
                 if (exist) {
                     return makeResponse(res, 400, false, 'User already exits', undefined);
                 }
-                const result = await addContact(req.body);
+                const result = await addUser(req.body);
                 await makeResponse(res, 200, true, "User created successfully", result);
             } catch (error) {
                 await makeResponse(res, 400, false, (error as { message: string }).message, undefined);
@@ -30,17 +30,17 @@ router
         })
 
     .put('/',
-        updateContactValidation,
+        updateUserValidation,
         async (req, res) => {
             const { _id, ...payload } = req.body;
 
             try {
 
-                if (payload?.contact) {
-                    const isExist = await getContact({
+                if (payload?.User) {
+                    const isExist = await getUser({
                         _id: { $ne: _id },
-                        'contact.email': payload.contact.email,
-                        'contact.mobileNumber.number': payload?.contact?.mobileNumber.number,
+                        'conatct.email': payload.User.email,
+                        'conatct.mobileNumber.number': payload?.User?.mobileNumber.number,
                     });
 
                     if (isExist) {
@@ -48,7 +48,7 @@ router
                     }
                 }
 
-                const result = await updateContact({ _id }, payload, { new: true })
+                const result = await updateUser({ _id }, payload, { new: true })
                 await makeResponse(res, 200, true, 'User updated successfully', result);
             } catch (error) {
 
@@ -63,7 +63,7 @@ router
                 return makeResponse(res, 400, false, "_id is required", undefined);
             }
 
-            getContact({ _id, isDeleted: false })
+            getUser({ _id, isDeleted: false })
                 .then(async (result: any) => {
                     await makeResponse(res, 200, true, "User fetched successfully", result);
                 })
@@ -78,7 +78,7 @@ router
         if (!_ids || !_ids?.length) {
             return makeResponse(res, 400, false, "_id is required", undefined);
         }
-        updateContacts({ _id: { $in: _ids } }, { isDeleted: true }, { new: true })
+        updateUsers({ _id: { $in: _ids } }, { isDeleted: true }, { new: true })
             .then(async (result: any) => {
                 await makeResponse(res, 200, true, "User deleted successfully", result);
             })
@@ -115,15 +115,15 @@ router
                 if (query.page) { page = Number(query.page); }
                 if (query.limit) { limit = Number(query.limit); }
                 skip = (page - 1) * limit;
-                const documentsCount = await getContactsCount(searchQuery);
-                const data = await getContactsWithPagination(searchQuery, { __v: 0 }, { skip, limit });
+                const documentsCount = await getUsersCount(searchQuery);
+                const data = await getUsersWithPagination(searchQuery, { __v: 0 }, { skip, limit });
                 await makeResponse(res, 200, true, "User fetched successfully", data, {
                     page,
                     totalPages: Math.ceil(documentsCount / limit),
                     totalRecords: documentsCount
                 });
             } else {
-                const data = await getContacts(searchQuery, { __v: 0 });
+                const data = await getUsers(searchQuery, { __v: 0 });
                 await makeResponse(res, 200, true, "User fetched successfully", data);
             }
         } catch (error: any) {
@@ -131,11 +131,4 @@ router
         }
     });
 
-router
-    .get('/text', async (req, res) => {
-        await makeResponse(res, 200, true, "User fetched successfully", {
-            qwerty: process.env.USER
-        });
-    })
-
-export const contactController = router;
+export const UserController = router;

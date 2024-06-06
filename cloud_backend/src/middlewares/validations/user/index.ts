@@ -1,9 +1,11 @@
 import joi from 'joi';
 import { makeResponse } from '../../../lib';
 
-export const addContactValidation = (req: any, res: any, next: any) => {
+export const addUserValidation = (req: any, res: any, next: any) => {
     const activity = joi.object({
         firstName: joi.string()
+            .required(),
+        lastName: joi.string()
             .required(),
         gender: joi.string()
             .valid('MALE', 'FEMALE', 'TRANSGENDER')
@@ -30,7 +32,7 @@ export const addContactValidation = (req: any, res: any, next: any) => {
     next();
 };
 
-export const updateContactValidation = (req: any, res: any, next: any) => {
+export const updateUserValidation = (req: any, res: any, next: any) => {
     const activity = joi.object({
         _id: joi.string()
             .required(),

@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { IContact } from '../../lib';
+import { IUser } from '../../lib';
 
 const phoneSchema = new Schema({
     dialCode: String,
@@ -19,6 +19,9 @@ const schema = new Schema({
     firstName: {
         type: String,
     },
+    lastName: {
+        type: String,
+    },
     gender: {
         type: String,
         enum: ['MALE', 'FEMALE', 'TRANSGENDER']
@@ -36,5 +39,5 @@ const schema = new Schema({
     }
 }, { timestamps: true });
 
-const CONTACT = model<IContact>('user', schema);
-export { CONTACT };
+const USER = model<IUser>('user', schema);
+export { USER };

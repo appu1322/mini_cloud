@@ -10,7 +10,7 @@ interface Contact {
     mobileNumber: PhoneSchema;
 }
 
-export interface IContact {
+export interface IUser {
     firstName?: string;
     gender?: 'MALE' | 'FEMALE' | 'TRANSGENDER';
     contact?: Contact;

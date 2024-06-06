@@ -45,6 +45,8 @@ const Home = () => {
 
   const onInputUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+    console.log({files});
+    
     if (files && files.length) {
       const modifiedFiles = Array.from(files).map((file, i) => ({ id: i, file, status: "Ready for upload" }) )
       setState(modifiedFiles);
