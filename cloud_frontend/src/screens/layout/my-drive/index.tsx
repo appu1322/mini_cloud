@@ -4,8 +4,80 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import ContentHeader from '../../../components/content-header';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
+import ContentCard from "../../../components/content-card";
+import { useEffect, useState } from "react";
+
+const data = [
+    {
+        id: 1,
+        title: "test",
+        logo: <InsertDriveFileIcon fontSize="small" />
+    },
+    {
+        id: 2,
+        title: "test2",
+        logo: <InsertDriveFileIcon fontSize="small" />
+    },
+    {
+        id: 3,
+        title: "tes3",
+        logo: <InsertDriveFileIcon fontSize="small" />
+    },
+    {
+        id: 4,
+        title: "tes4",
+        logo: <InsertDriveFileIcon fontSize="small" />
+    },
+    {
+        id: 5,
+        title: "tes5",
+        logo: <InsertDriveFileIcon fontSize="small" />
+    }
+]
+
+interface IState {
+    selected: Array<string | number>
+    shiftPressing: boolean
+}
 
 const MyDrive = () => {
+    const [state, setState] = useState<IState>({
+        selected: [],
+        shiftPressing: false
+    });
+
+    useEffect(() => {
+        window.addEventListener("keydown", e => {
+            if (e.repeat) {
+                return
+            }
+            setState(prev => ({ ...prev, shiftPressing: true }))
+        });
+        window.addEventListener("keyup", e => {
+            if (e.repeat) {
+                return
+            }
+            setState(prev => ({ ...prev, shiftPressing: false }))
+        });
+
+    }, [])
+
+
+    const onSelect = (id: string | number) => {
+        let payload = state.selected;
+
+        if (payload.includes(id) && state.shiftPressing) {
+            payload = payload.filter(ele => ele !== id);
+            setState(prev => ({ ...prev, selected: payload }));
+        } else if (payload.includes(id)) {
+            setState(prev => ({ ...prev, selected: payload.length > 1 ? [id] : [] }));
+        } else if (state.shiftPressing) {
+            setState(prev => ({ ...prev, selected: [...state.selected, id] }));
+        } else {
+            setState(prev => ({ ...prev, selected: [id] }));
+        }
+    }
+
     return (
         <div>
             <ContentHeader
@@ -15,57 +87,32 @@ const MyDrive = () => {
             />
 
             <div className="file-actions">
-                <IconButton><CloseIcon /></IconButton>
-                <Typography variant="body2">2 Selected</Typography>
-                <IconButton className="ml-3"><DownloadIcon /></IconButton>
+                {
+                    state.selected.length ?
+                        <div className="active">
+                            <IconButton onClick={() =>  setState(prev => ({ ...prev, selected: [] }))}><CloseIcon /></IconButton>
+                            <Typography variant="body2">{state.selected.length} Selected</Typography>
+                            <IconButton className="ml-3"><DownloadIcon /></IconButton>
+                        </div>
+                        :
+                        <Typography variant="caption">No item selected!</Typography>
+                }
             </div>
 
             <div>
                 <Grid container spacing={2}>
-                    <Grid item xs={6} md={4} lg={3} xl={2}>
-                        <div className='file-card'>
-                            <div className="header">
-                                <InsertDriveFileIcon className="mr-3" fontSize="small" />
-                                <div className="title"> nfmsf sd sdffd fdg dfg fdg fdg fd g dg fd gd fg fd gd fgdf gdfg </div>
-                            </div>
-                            <div className="preview">
-                                preview
-                            </div>
-                        </div>
-                    </Grid>
-                    <Grid item xs={6} md={4} lg={3} xl={2}>
-                        <div className='file-card'>
-                            <div className="header">
-                                <InsertDriveFileIcon className="mr-3" fontSize="small" />
-                                <div className="title"> nfmsf sd sdffd fdg dfg fdg fdg fd g dg fd gd fg fd gd fgdf gdfg </div>
-                            </div>
-                            <div className="preview">
-                                preview
-                            </div>
-                        </div>
-                    </Grid>
-                    <Grid item xs={6} md={4} lg={3} xl={2}>
-                        <div className='file-card'>
-                            <div className="header">
-                                <InsertDriveFileIcon className="mr-3" fontSize="small" />
-                                <div className="title"> nfmsf sd sdffd fdg dfg fdg fdg fd g dg fd gd fg fd gd fgdf gdfg </div>
-                            </div>
-                            <div className="preview">
-                                preview
-                            </div>
-                        </div>
-                    </Grid>
-                    <Grid item xs={6} md={4} lg={3} xl={2}>
-                        <div className='file-card'>
-                            <div className="header">
-                                <InsertDriveFileIcon className="mr-3" fontSize="small" />
-                                <div className="title"> nfmsf sd sdffd fdg dfg fdg fdg fd g dg fd gd fg fd gd fgdf gdfg </div>
-                            </div>
-                            <div className="preview">
-                                preview
-                            </div>
-                        </div>
-                    </Grid>
+                    {
+                        data.map(ele => {
+                            return <ContentCard
+                                key={ele.id}
+                                id={ele.id}
+                                logo={ele.logo}
+                                title={ele.title}
+                                active={state.selected.includes(ele.id)}
+                                onClick={onSelect}
+                            />
+                        })
+                    }
                 </Grid>
             </div>
 

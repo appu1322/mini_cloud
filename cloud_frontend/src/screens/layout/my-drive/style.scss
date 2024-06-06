@@ -1,39 +1,13 @@
-.file-card{
-    background-color: #f0f4f9;
-    padding: 10px;
-    border-radius: 10px;
 
-    .header {
-        display: flex;
-        align-items: center;
-        padding-top: 10px;
-        padding-bottom: 20px;
-
-        .title {
-            white-space: nowrap;
-            overflow: hidden;
-            margin-right: 10px;
-        }
-    }
-
-    .preview{
-        height: 200px;
-        width: 100%;
-        background-color: #fff;
-        border-radius: 5px;
-    }
-
-    &:hover{
-        background-color: #e5e5e5;
-
-    }
-}
 
 .file-actions{
     margin: 10px 0px;
     padding: 4px 0px;
-    display: flex;
-    align-items: center;
-    background-color: #f0f4f9;
-    border-radius: 20px;
+
+    .active {
+        display: flex;
+        align-items: center;
+        background-color: #f0f4f9;
+        border-radius: 20px;
+    }
 }

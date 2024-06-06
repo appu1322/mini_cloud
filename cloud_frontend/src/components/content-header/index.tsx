@@ -26,7 +26,7 @@ const ContentHeader: FC<IProps> = ({ title, viewMode, onSelectViewMode }) => {
 
     return (
         <div>
-            <Box className='center' justifyContent="space-between" paddingY="20px">
+            <Box className='center' justifyContent="space-between" paddingTop="20px">
                 <Typography fontWeight="600" textTransform="uppercase" variant="h6">{title}</Typography>
 
                 <div className="action">
