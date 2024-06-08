@@ -1,2 +1,2 @@
-export *from './contact'
+export *from './user'
 export *from './upoad'
