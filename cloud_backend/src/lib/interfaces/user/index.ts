@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 interface PhoneSchema {
     dialCode: string;
     iso2: string;
@@ -11,7 +13,9 @@ interface Contact {
 }
 
 export interface IUser {
+    _id: Types.ObjectId,
     firstName?: string;
+    lastName?: string;
     gender?: 'MALE' | 'FEMALE' | 'TRANSGENDER';
     contact?: Contact;
     isDeleted?: boolean;

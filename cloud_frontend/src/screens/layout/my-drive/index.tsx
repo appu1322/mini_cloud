@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import ContentCard from "../../../components/content-card";
 import { useEffect, useState } from "react";
+import { useDropzone } from 'react-dropzone'
 
 const data = [
     {
@@ -41,6 +42,13 @@ interface IState {
 }
 
 const MyDrive = () => {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        noClick: true,
+        onDrop: (acceptFiles) => {
+            console.log({ acceptFiles });
+
+        }
+    })
     const [state, setState] = useState<IState>({
         selected: [],
         shiftPressing: false
@@ -79,7 +87,7 @@ const MyDrive = () => {
     }
 
     return (
-        <div>
+        <div className="h-100">
             <ContentHeader
                 title='My Drive'
                 viewMode="grid"
@@ -90,7 +98,7 @@ const MyDrive = () => {
                 {
                     state.selected.length ?
                         <div className="active">
-                            <IconButton onClick={() =>  setState(prev => ({ ...prev, selected: [] }))}><CloseIcon /></IconButton>
+                            <IconButton onClick={() => setState(prev => ({ ...prev, selected: [] }))}><CloseIcon /></IconButton>
                             <Typography variant="body2">{state.selected.length} Selected</Typography>
                             <IconButton className="ml-3"><DownloadIcon /></IconButton>
                         </div>
@@ -99,7 +107,30 @@ const MyDrive = () => {
                 }
             </div>
 
-            <div>
+            <div {...getRootProps()} className="dropzone-wrapper">
+                <input {...getInputProps()} />
+                {
+                    isDragActive ?
+                        <div>Drop the files here ...</div> :
+                        // <p>Drag 'n' drop some files here, or click to select files</p>
+                        <Grid container spacing={2}>
+                        {
+                            data.map(ele => {
+                                return <ContentCard
+                                    key={ele.id}
+                                    id={ele.id}
+                                    logo={ele.logo}
+                                    title={ele.title}
+                                    active={state.selected.includes(ele.id)}
+                                    onClick={onSelect}
+                                />
+                            })
+                        }
+                    </Grid>
+                }
+            </div>
+
+            {/* <div>
                 <Grid container spacing={2}>
                     {
                         data.map(ele => {
@@ -114,7 +145,7 @@ const MyDrive = () => {
                         })
                     }
                 </Grid>
-            </div>
+            </div> */}
 
         </div>
     )

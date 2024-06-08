@@ -1,55 +1,53 @@
 import { Router } from 'express';
 import { makeResponse } from '../../lib';
-import { addUserValidation, updateUserValidation } from '../../middlewares';
-import { addUser, updateUser, getUser, getUsers, getUsersWithPagination, getUsersCount, updateUsers } from '../../services';
+import { addRoleValidation, updateRoleValidation } from '../../middlewares';
+import { addRole, updateRole, getRole, getRoles, getRolesWithPagination, getRolesCount, updateRoles } from '../../services';
 
 const router = Router();
 
 router
     .post(
         '/',
-        addUserValidation,
+        addRoleValidation,
         async (req, res) => {
-            const { User } = req.body;
+            const { Role } = req.body;
             const search = {
-                'conatct.email': User.email,
-                'conatct.mobileNumber.number': User.mobileNumber.number
+                'name': Role.name,
             };
             try {
-                User.email
-                const exist = await getUser(search);
+                Role.email
+                const exist = await getRole(search);
 
                 if (exist) {
-                    return makeResponse(res, 400, false, 'User already exits', undefined);
+                    return makeResponse(res, 400, false, 'Role already exits', undefined);
                 }
-                const result = await addUser(req.body);
-                await makeResponse(res, 200, true, "User created successfully", result);
+                const result = await addRole(req.body);
+                await makeResponse(res, 200, true, "Role created successfully", result);
             } catch (error) {
                 await makeResponse(res, 400, false, (error as { message: string }).message, undefined);
             }
         })
 
     .put('/',
-        updateUserValidation,
+        updateRoleValidation,
         async (req, res) => {
             const { _id, ...payload } = req.body;
 
             try {
 
-                if (payload?.User) {
-                    const isExist = await getUser({
+                if (payload?.Role) {
+                    const isExist = await getRole({
                         _id: { $ne: _id },
-                        'conatct.email': payload.User.email,
-                        'conatct.mobileNumber.number': payload?.User?.mobileNumber.number,
+                        'name': payload.name,
                     });
 
                     if (isExist) {
-                        return makeResponse(res, 400, true, 'User already exits');
+                        return makeResponse(res, 400, true, 'Role already exits');
                     }
                 }
 
-                const result = await updateUser({ _id }, payload, { new: true })
-                await makeResponse(res, 200, true, 'User updated successfully', result);
+                const result = await updateRole({ _id }, payload, { new: true })
+                await makeResponse(res, 200, true, 'Role updated successfully', result);
             } catch (error) {
 
                 await makeResponse(res, 400, false, (error as { message: string }).message, undefined);
@@ -63,9 +61,9 @@ router
                 return makeResponse(res, 400, false, "_id is required", undefined);
             }
 
-            getUser({ _id, isDeleted: false })
+            getRole({ _id, isDeleted: false })
                 .then(async (result) => {
-                    await makeResponse(res, 200, true, "User fetched successfully", result);
+                    await makeResponse(res, 200, true, "Role fetched successfully", result);
                 })
                 .catch(async error => {
                     await makeResponse(res, 400, false, error.message, undefined);
@@ -78,9 +76,9 @@ router
         if (!_ids || !_ids?.length) {
             return makeResponse(res, 400, false, "_id is required", undefined);
         }
-        updateUsers({ _id: { $in: _ids } }, { isDeleted: true }, { new: true })
+        updateRoles({ _id: { $in: _ids } }, { isDeleted: true }, { new: true })
             .then(async (result) => {
-                await makeResponse(res, 200, true, "User deleted successfully", result);
+                await makeResponse(res, 200, true, "Role deleted successfully", result);
             })
             .catch(async error => {
                 await makeResponse(res, 400, false, error.message, undefined);
@@ -116,20 +114,20 @@ router
                 if (query.page) { page = Number(query.page); }
                 if (query.limit) { limit = Number(query.limit); }
                 skip = (page - 1) * limit;
-                const documentsCount = await getUsersCount(searchQuery);
-                const data = await getUsersWithPagination(searchQuery, { __v: 0 }, { skip, limit });
-                await makeResponse(res, 200, true, "User fetched successfully", data, {
+                const documentsCount = await getRolesCount(searchQuery);
+                const data = await getRolesWithPagination(searchQuery, { __v: 0 }, { skip, limit });
+                await makeResponse(res, 200, true, "Role fetched successfully", data, {
                     page,
                     totalPages: Math.ceil(documentsCount / limit),
                     totalRecords: documentsCount
                 });
             } else {
-                const data = await getUsers(searchQuery, { __v: 0 });
-                await makeResponse(res, 200, true, "User fetched successfully", data);
+                const data = await getRoles(searchQuery, { __v: 0 });
+                await makeResponse(res, 200, true, "Role fetched successfully", data);
             }
         } catch (error: any) {
             await makeResponse(res, 400, false, error.message, undefined);
         }
     });
 
-export const UserController = router;
+export const RoleController = router;

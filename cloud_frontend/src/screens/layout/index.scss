@@ -1,6 +1,6 @@
 .layout{
     display: flex;
-    height: calc(100vh - 68px);
+    height: calc(100vh - 66px);
 
     .sidebar {
         padding: 0px 16px;
@@ -13,6 +13,7 @@
 
     .content {
         width: calc(100% - 250px);
+        height: 100%;
         padding: 0px 16px;
         border-radius: 25px 0px 0px 0px;
         background-color: #fff;

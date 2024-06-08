@@ -13,9 +13,6 @@ const schema = new Schema({
     extension: {
         type: String,
     },
-    isFolder: {
-        type: Boolean,
-    },
     parentId: {
         type: String,
     },

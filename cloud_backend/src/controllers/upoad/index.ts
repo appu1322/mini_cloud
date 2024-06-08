@@ -37,7 +37,7 @@ router
 router
     .get('/test', async (req, res) => {
         const filePath = path.join(__dirname, '../../../', 'uploads/', 'abc.mp4');
-        const {fileName} = req.query;
+        const {fileName} = req.query as { fileName: string };
 
         res.download(
             filePath,
